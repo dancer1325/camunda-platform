@@ -1,16 +1,16 @@
 # Camunda Platform 8
 
-This repository contains links to Camunda Platform 8 resources, the official release artifacts (binaries), and supporting config files for running Docker Compose as a local development option. 
-
-:warning: **Docker Compose is only recommended for local development.** :warning:
-
-
-We recommend using [SaaS](https://camunda.com/get-started/) or [Helm/Kubernetes](https://docs.camunda.io/docs/self-managed/setup/overview/) for development.
-
-For more information about Self-Managed, including additional [development installation options](https://docs.camunda.io/docs/self-managed/setup/overview/), see our [documentation](https://docs.camunda.io/docs/self-managed/about-self-managed/).
-
-
-For production setups we recommend using [Helm charts](https://docs.camunda.io/docs/self-managed/setup/install/) which can be found at [helm.camunda.io](https://helm.camunda.io/).
+* this repo
+  * links to Camunda Platform 8 resources / official release artifacts (binaries)
+  * supporting config files -- for running Docker Compose -- as a local development option
+* Recommendations
+  * ⚠️ **Docker Compose is ONLY recommended for local development** ⚠️
+  * [SaaS](https://camunda.com/get-started/) or
+  * [Helm/Kubernetes](https://docs.camunda.io/docs/self-managed/setup/overview/)
+    * recommended for production
+    * [Helm charts](https://docs.camunda.io/docs/self-managed/setup/install/)
+    * [helm.camunda.io](https://helm.camunda.io/) 
+  * [Self-Managed](https://docs.camunda.io/docs/self-managed/setup/overview/)
 
 ## Links to additional Camunda Platform 8 repos and assets
 
@@ -22,65 +22,71 @@ For production setups we recommend using [Helm charts](https://docs.camunda.io/d
 - [Zeebe Workflow Engine](https://github.com/camunda/zeebe)
 - [Contact](https://docs.camunda.io/contact/)
 
-## Using Docker Compose
+## Via Docker Compose
 
-> :information_source: The docker-compose file in this repository uses the latest [compose specification](https://docs.docker.com/compose/compose-file/), which was introduced with docker compose version 1.27.0+. Please make sure to use an up-to-date docker compose version.
+* requirements
+  * Docker 20.10.16+
+    * Reason: 🧠 [docker compose version 1.27.0+ specifications are being used | "dockerCompose.yaml"](https://docs.docker.com/compose/compose-file/) 🧠
+### complete Camunda
+* [docker-compose.yaml](docker-compose.yaml)
+  * == complete Camunda Platform 8 Self-Managed environment
+    * Zeebe
+    * Operate
+    * Tasklist
+    * Connectors
+    * Optimize
+    * Identity
+    * Elasticsearch
+    * Keycloak
+    * PostgreSQL
+    * Web Modeler
+      * ❌NOT included by default ❌
+      * [Follow the instructions below](#web-modeler-self-managed) to install it
+  * `docker compose up -d`
+  * Check
+    * Keycloak
+      * 's container logs -- to ensure -- components have started
+      * allows
+        * managing users
+          * [http://localhost:18080/auth/](http://localhost:18080/auth/) / login with 
+            * `demo` - `demo`
+            * `admin` - `admin`
+              * Problem: it does NOT work
+                * Solution: TODO:
+    * navigate to the different web apps & log in with the user `demo` and password `demo`
+      * Operate: [http://localhost:8081](http://localhost:8081)
+        * it's network != Identity's network
+        * Problem: "NOT up"
+          * Solution: TODO:
+      * Tasklist: [http://localhost:8082](http://localhost:8082)
+        * it's network != Identity's network
+        * Problem: "NOT up"
+          * Solution: TODO:
+      * Optimize: [http://localhost:8083](http://localhost:8083)
+        * Problem: "NOT up"
+          * Solution: TODO:
+      * Identity: [http://localhost:8084](http://localhost:8084)
+        * Problem: "NOT up"
+          * Solution: TODO:
+      * Elasticsearch: [http://localhost:9200](http://localhost:9200)
+    * Zeebe
+      * -- available -- gRPC | `localhost:26500`
+      * it's network != Identity's network
+  * `docker compose down -v`
+    * down the WHOLE environment
 
-> :information_source: Docker 20.10.16+ is required.
+### basic components
 
-To spin up a complete Camunda Platform 8 Self-Managed environment locally the [docker-compose.yaml](docker-compose.yaml) file in this repository can be used.
-
-The full environment contains these components:
-- Zeebe
-- Operate
-- Tasklist
-- Connectors
-- Optimize
-- Identity
-- Elasticsearch
-- Keycloak
-- PostgreSQL
-
-> :information_source: Web Modeler is not included by default. Please follow [the instructions below](#web-modeler-self-managed) to install it.
-
-Clone this repo and issue the following command to start your environment:
-
-```
-docker compose up -d
-```
-
-Wait a few minutes for the environment to start up and settle down. Monitor the logs, especially the Keycloak container log, to ensure the components have started.
-
-Now you can navigate to the different web apps and log in with the user `demo` and password `demo`:
-- Operate: [http://localhost:8081](http://localhost:8081)
-- Tasklist: [http://localhost:8082](http://localhost:8082)
-- Optimize: [http://localhost:8083](http://localhost:8083)
-- Identity: [http://localhost:8084](http://localhost:8084)
-- Elasticsearch: [http://localhost:9200](http://localhost:9200)
-
-Keycloak is used to manage users. Here you can log in with the user `admin` and password `admin`
-- Keycloak: [http://localhost:18080/auth/](http://localhost:18080/auth/)
-
-The workflow engine Zeebe is available using gRPC at `localhost:26500`.
-
-To tear down the whole environment run the following command:
-
-```
-docker compose down -v
-```
-
-Zeebe, Operate, Tasklist, along with Optimize require a separate network from Identity as you'll see in the docker-compose file.
-
-### Using the basic components
-
-If Optimize, Identity, and Keycloak are not needed you can use the [docker-compose-core.yaml](docker-compose-core.yaml) instead which does not include these components:
-
-```
-docker compose -f docker-compose-core.yaml up -d
-```
+* == NOT needed
+  * Optimize
+  * Identity
+  * Keycloak -> use [docker-compose-core.yaml](docker-compose-core.yaml)
+* `docker compose -f docker-compose-core.yaml up -d`
+* Open in your browser "localhost:8081" / pass `demo` - `demo` as credentials
 
 ### Deploying BPMN diagrams
 
+* TODO:
 In addition to the local environment setup with docker compose, use the [Camunda Desktop Modeler](#desktop-modeler) to locally model BPMN diagrams for execution and directly deploy them to your local environment.
 As an enterprise customer, you can [use Web Modeler](#web-modeler-self-managed).
 
