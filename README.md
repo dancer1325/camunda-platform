@@ -82,6 +82,23 @@
   * Identity
   * Keycloak -> use [docker-compose-core.yaml](docker-compose-core.yaml)
 * `docker compose -f docker-compose-core.yaml up -d`
+* Check that they are running
+  * Connectors
+    * "http://localhost:8085/" redirect to the default error page of Spring Boot, but running
+  * Operate
+    * "http://localhost:8081/" and login in
+  * elasticsearch
+    * "http://localhost:9200/"
+  * kibana
+    * "http://localhost:5601/"
+      * Problem: NOT even run it during compose
+        * Solution: TODO:
+        * Note: it seems to depend on elasticsearch
+  * zeebe
+    * "http://localhost:8088/" & "http://localhost:9600" returns an error
+    * Note: TODO: it's expected?
+  * tasklist
+    * "http://localhost:8082/" works
 * Open in your browser "localhost:8081" / pass `demo` - `demo` as credentials
 
 ### Deploying BPMN diagrams
